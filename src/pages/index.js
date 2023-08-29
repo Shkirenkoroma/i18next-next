@@ -1,22 +1,22 @@
-import { Inter } from 'next/font/google'
-import { useRouter } from 'next/router'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 export default function Home() {
-  const { locale } = useRouter();
+  const { t } = useTranslation('common');
 
-  const greetings = {
-    en: 'Hello World!',
-    nl: 'Hallo Wereld!',
-    de: 'Hallo Welt!'
-  }
-   
   return (
     <section>
       <h1 className="text-6xl mx-auto max-w-xl text-center font-bold">
-        {greetings[locale]}
+        {t('head')}
       </h1>
     </section>
-  )
+  );
+}
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common']))
+    }
+  };
 }
